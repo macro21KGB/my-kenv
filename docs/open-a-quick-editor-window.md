@@ -1,0 +1,1 @@
+It will open an editor window with the current text in your clipboard

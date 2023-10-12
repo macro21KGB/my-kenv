@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "@johnlindquist/kit": "file:../.kit",
+    "@types/node": "^20.2.5",
+    "@types/promise-fs": "^2.1.2",
+    "ai": "^2.1.9",
+    "cheerio": "^1.0.0-rc.12",
+    "exif-js": "^2.3.0",
+    "exif-parser": "^0.1.12",
+    "g-i-s": "^2.1.6",
+    "get-app-icon": "^1.0.1",
+    "json-to-ts": "^1.7.0",
+    "keyv": "^4.5.2",
+    "langchain": "^0.0.81",
+    "openai": "^3.3.0",
+    "openai-edge": "^1.1.0",
+    "simple-git": "^3.19.1",
+    "wikipedia": "^2.0.0"
+  }
+}
