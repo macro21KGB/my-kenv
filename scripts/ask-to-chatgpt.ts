@@ -19,6 +19,10 @@ const response = await openai.createChatCompletion({
     temperature: 0.6,
     messages: [
         {
+            role: "system",
+            content: "You are an helpful AI, you will try to output concise and helpful answers to the user's questions, use markdown to format your answers."
+        },
+        {
             role: "user",
             content: await arg("What do you want to say?"),
         }

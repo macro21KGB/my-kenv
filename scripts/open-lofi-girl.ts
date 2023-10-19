@@ -6,7 +6,7 @@
 import "@johnlindquist/kit"
 
 const LofiGirlStreams = {
-    "Lofi-Boy": "https://www.youtube.com/embed/MVPTGNGiI-4",
+    "Lofi-Boy": "https://www.youtube.com/embed/4xDzrJKXOOY",
     "Lofi-Girl": "https://www.youtube.com/embed/jfKfPfyJRdk"
 } as const;
 
