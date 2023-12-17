@@ -5,7 +5,6 @@
 
 import "@johnlindquist/kit";
 import { Configuration, OpenAIApi } from 'openai-edge';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -14,8 +13,7 @@ const config = new Configuration({
 const openai = new OpenAIApi(config);
 
 const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    stream: true,
+    model: 'gpt-3.5-turbo-1106',
     temperature: 0.6,
     messages: [
         {
@@ -24,15 +22,11 @@ const response = await openai.createChatCompletion({
         },
         {
             role: "user",
-            content: await arg("What do you want to say?"),
+            content: await arg("What do you want to ask?"),
         }
     ]
 });
 
-// Convert the response into a friendly text-stream
-const stream = OpenAIStream(response);
-// Respond with the stream
+const responseText: string = (await response.json()).choices[0].message.content;
 
-const responseText = new StreamingTextResponse(stream);
-
-div(md(await responseText.text()))
+await div(md(responseText))
