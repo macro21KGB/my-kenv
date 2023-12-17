@@ -11,20 +11,15 @@ try {
     const searchValue = await arg('What do you want to search for? (wikipedia)')
     const summary = await wiki.summary(searchValue);
 
-    if (summary.extract == null)
-        div(md(`No summary found for ${searchValue}`));
-
-
-
-    else if (summary.extract.length < 50)
-        div(md(`No summary found for ${searchValue}`));
-
-    else
-        div({
+    if (summary.extract == null || summary.extract.length < 50) {
+        await div(md(`No summary found for ${searchValue}`));
+    }
+    else {
+        await div({
             html: md(summary.extract),
             placeholder: md(`Summary for ${searchValue}`)
-        }
-        );
+        });
+    }
 
 } catch (error) {
     console.log(error);

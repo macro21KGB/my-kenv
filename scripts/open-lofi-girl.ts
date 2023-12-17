@@ -1,6 +1,5 @@
 // Preview: docs
 // Name: Open lofi-girl
-// Shortcode: li
 // Cache: true
 
 import "@johnlindquist/kit"

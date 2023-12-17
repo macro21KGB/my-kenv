@@ -11,14 +11,14 @@ const config = new Configuration({
 });
 
 const openai = new OpenAIApi(config);
-
 const response = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo-1106',
-    temperature: 0.6,
+    stream: false,
+    temperature: 0.5,
     messages: [
         {
             role: "system",
-            content: "You are an helpful AI, you will try to output concise and helpful answers to the user's questions, use markdown to format your answers."
+            content: "You are an helpful AI, you will try to output concise and helpful answers to the user's questions, use markdown to format your answers"
         },
         {
             role: "user",
