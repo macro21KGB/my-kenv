@@ -12,9 +12,10 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo-1106',
+    model: 'gpt-3.5-turbo',
     stream: false,
-    temperature: 0.5,
+    temperature: 0.7,
+    max_tokens: 600,
     messages: [
         {
             role: "system",
