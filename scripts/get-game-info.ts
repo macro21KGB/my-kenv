@@ -59,7 +59,7 @@ const selectedGameName = await arg("Select a game: ", matchedGames.data.map(game
 const selectedGame = matchedGames.data.find(game => game.name === selectedGameName)
 
 
-div(
+await div(
     `
     <div style="padding:1rem;">
         <h2>${selectedGame.name}</h2>

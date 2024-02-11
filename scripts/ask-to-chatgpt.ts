@@ -4,17 +4,46 @@
 // Group: AI
 
 import "@johnlindquist/kit";
-import { Configuration, OpenAIApi } from 'openai-edge';
+import { Configuration, CreateChatCompletionResponse, OpenAIApi } from 'openai-edge';
+
+type Model = {
+    name: string;
+    promptCost: number;
+    resultCost: number;
+}
+
+const convertAmountOfTokenToCost = (promptTokens: number, resultTokens: number, model: Model) => {
+
+    const promptTokensCost = (promptTokens / 1000) * model.promptCost;
+    const resultTokensCost = (resultTokens / 1000) * model.resultCost;
+
+    return promptTokensCost + resultTokensCost;
+}
+
+const models: Model[] = [
+    {
+        name: 'gpt-3.5-turbo' as const,
+        promptCost: 0.0005,
+        resultCost: 0.0015
+    },
+    {
+        name: 'gpt-4-0125-preview' as const,
+        promptCost: 0.01,
+        resultCost: 0.03
+    }
+];
 
 const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+const selectedModel = models[0]
 const openai = new OpenAIApi(config);
 const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo-1106',
+    model: selectedModel.name,
     stream: false,
-    temperature: 0.5,
+    temperature: 1,
+    max_tokens: 600,
     messages: [
         {
             role: "system",
@@ -27,6 +56,6 @@ const response = await openai.createChatCompletion({
     ]
 });
 
-const responseText: string = (await response.json()).choices[0].message.content;
+const data: CreateChatCompletionResponse = await response.json();
+await div(md(`${convertAmountOfTokenToCost(data.usage.prompt_tokens, data.usage.completion_tokens, selectedModel)}€ spent`));
 
-await div(md(responseText))

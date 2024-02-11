@@ -2,6 +2,7 @@ import "@johnlindquist/kit"
 
 // Menu: Search Anime
 // Description: Anime search with jikan.moe API
+// Keyword: anime
 // Author: Mario De Luca
 
 let anime = await arg("Anime:")
