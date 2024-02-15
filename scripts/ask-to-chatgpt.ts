@@ -14,7 +14,7 @@ type Model = {
 
 const models: Model[] = [
     {
-        name: 'gpt-3.5-turbo-0125' as const,
+        name: 'gpt-3.5-turbo' as const,
         promptCost: 0.0005,
         resultCost: 0.0015
     },
@@ -23,7 +23,7 @@ const models: Model[] = [
         promptCost: 0.01,
         resultCost: 0.03
     }
-] as const;
+];
 
 const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -43,7 +43,7 @@ const response = await openai.createChatCompletion({
         },
         {
             role: "user",
-            content: await arg("What do you want to say?"),
+            content: await arg("What do you want to ask?"),
         }
     ]
 });
