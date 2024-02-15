@@ -12,14 +12,6 @@ type Model = {
     resultCost: number;
 }
 
-const convertAmountOfTokenToCost = (promptTokens: number, resultTokens: number, model: Model) => {
-
-    const promptTokensCost = (promptTokens / 1000) * model.promptCost;
-    const resultTokensCost = (resultTokens / 1000) * model.resultCost;
-
-    return promptTokensCost + resultTokensCost;
-}
-
 const models: Model[] = [
     {
         name: 'gpt-3.5-turbo-0125' as const,
@@ -57,7 +49,4 @@ const response = await openai.createChatCompletion({
 });
 
 const data: CreateChatCompletionResponse = await response.json();
-await div(md(`${data.choices[0].message.content}
----
-${convertAmountOfTokenToCost(data.usage.prompt_tokens, data.usage.completion_tokens, selectedModel)}€ spent`));
-
+await div(md(`${data.choices[0].message.content}`));
