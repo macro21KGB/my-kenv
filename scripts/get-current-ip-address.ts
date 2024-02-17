@@ -2,13 +2,13 @@
 
 import "@johnlindquist/kit"
 
-import os from "os"
+import { networkInterfaces } from "os"
 
-const networkInterfaces = os.networkInterfaces();
 const addresses = [];
+const allInterfaces = networkInterfaces();
 
-for (const interfaceKey in networkInterfaces) {
-    const interfaces = networkInterfaces[interfaceKey];
+for (const interfaceKey in allInterfaces) {
+    const interfaces = allInterfaces[interfaceKey];
     for (let i = 0; i < interfaces.length; i++) {
         const address = interfaces[i];
         if (address.family === 'IPv4' && !address.internal) {

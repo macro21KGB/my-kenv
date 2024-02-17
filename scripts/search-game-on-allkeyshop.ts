@@ -24,31 +24,38 @@ const search = async (game: string) => {
     return data
 }
 
-const gameName = await arg("What game do you want to search?")
-const htmlString = await search(gameName);
-const $ = cheerio.load(htmlString);
+const convertToGame = (htmlString: string) => {
+    const $ = cheerio.load(htmlString);
+    return $(".search-results-row").get().map((row) => {
 
+        const name = $(row).find(".search-results-row-game-title").text().trim()
+        const price = $(row).find(".search-results-row-price").text().trim()
+        const link = $(row).find(".search-results-row-link").attr("href")
 
-const listOfGames: Game[] = $(".search-results-row").get().map((row) => {
-
-    const name = $(row).find(".search-results-row-game-title").text().trim()
-    const price = $(row).find(".search-results-row-price").text().trim()
-    const link = $(row).find(".search-results-row-link").attr("href")
-
-    return { name, price, link }
-})
-
-
-if (listOfGames.length === 0) {
-    div(md(`No games found for the search term: **${gameName}**`))
+        return { name, price, link }
+    })
 }
 
-const selectedGameUrl = await arg("Search results", listOfGames.map(game => {
-    return {
-        name: game.name,
-        description: game.price,
-        value: game.link
-    }
-}))
+const gameUrl = await arg("What game do you want to search?", async (input) => {
 
-await browse(selectedGameUrl)
+    if (input.trim() === "")
+        return []
+
+    const htmlString = await search(input);
+
+    const listOfGames: Game[] = convertToGame(htmlString)
+    if (listOfGames.length === 0) {
+        return [{ name: "No games found", value: "" }]
+    }
+
+    return listOfGames.map(game => {
+        return {
+            name: game.name,
+            value: game.link,
+            description: game.price,
+        }
+    })
+
+})
+
+await browse(gameUrl)
