@@ -17,8 +17,8 @@ interface Story {
 const BASE_URL = "https://hacker-news.firebaseio.com/v0/"
 
 const getTopStories = async (): Promise<number[]> => {
-    const response = await fetch(`${BASE_URL}topstories.json`)
-    return await response.json()
+    const response = await get<number[]>(`${BASE_URL}topstories.json`)
+    return response.data.slice(0, 100)
 }
 
 const getStory = async (id: number): Promise<Story> => {
@@ -34,7 +34,7 @@ const getStories = async (): Promise<Story[]> => {
 }
 
 // sort by time and get the top 100 stories
-const stories = (await getStories()).sort((a, b) => b.time - a.time).slice(0, 100)
+const stories = (await getStories()).sort((a, b) => b.time - a.time)
 
 const convertUnixToDate = (unix: number) => {
     const locale = Intl.DateTimeFormat().resolvedOptions().locale;
