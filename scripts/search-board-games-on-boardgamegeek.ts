@@ -32,7 +32,9 @@ const getBoardGames = async (query: string): Promise<GameInfo[]> => {
 
     if (!result) return [];
 
-    const convertedGames = result['items']['item'].map(convertToGameInfo) || [];
+    const games = result['items']['item'] || [];
+
+    const convertedGames = games.map(convertToGameInfo);
     return convertedGames;
 };
 
@@ -55,8 +57,6 @@ const convertToGameInfo = (item: any) => {
     }
 }
 
-
-
 const selectedGame = await arg("Search for a board game on BoardGameGeek", async (query) => {
     const games = await getBoardGames(query);
     return games.map(game => ({
@@ -76,13 +76,13 @@ const getInfoOfGameWithId = async (id: string) => {
         await div(`Error parsing XML: ${error.message}`, "text-red-500")
     })
 
-
     const item = parsed.items.item[0]
 
     const gameInfo = {
         minPLayers: item.minplayers[0].$.value,
         maxPlayers: item.maxplayers[0].$.value,
         averageRating: item.statistics[0].ratings[0].average[0].$.value,
+        description: item.description[0],
         image: item.image[0],
     }
 
@@ -91,13 +91,21 @@ const getInfoOfGameWithId = async (id: string) => {
 
 const gameInfo = await getInfoOfGameWithId(selectedGame.id)
 
-await div(`
-    <div class="flex flex-row justify-between">
-        <div class="flex flex-col flex-1">
-            <h1>${selectedGame.name} <span class="italic text-slate-500">(${selectedGame.yearpublished})</span></h1>
-            <p class="text-slate-600 italic">${gameInfo.minPLayers} - ${gameInfo.maxPlayers} players</p> 
-            <p>Average rating: <span class="font-bold">${gameInfo.averageRating}</span></p>
-        </div>
-        <img class="w-24" src="${gameInfo.image}" alt="${selectedGame.name}">
-    </div>
-`, "p-2")
+await div({
+    html: `
+        <h1>${selectedGame.name} <span class="italic text-slate-500">(${selectedGame.yearpublished})</span></h1>
+        <p class="text-slate-600 italic">${gameInfo.minPLayers} - ${gameInfo.maxPlayers} players</p> 
+        <p>Average rating: <span class="font-bold">${parseFloat(gameInfo.averageRating).toFixed(2)}</span></p>
+        <img class="w-20 absolute top-2 right-2" src="${gameInfo.image}" alt="${selectedGame.name}">
+        <p class="italic">${gameInfo.description}</p>
+`,
+    actions: [
+        {
+            name: "Open on BoardGameGeek",
+            onAction: () => {
+                open(`${BASE_URL}/boardgame/${selectedGame.id}`)
+            }
+
+        }
+    ]
+}, "p-2")
