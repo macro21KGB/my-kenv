@@ -28,13 +28,28 @@ const getStory = async (id: number): Promise<Story> => {
 
 const getStories = async (): Promise<Story[]> => {
     div("Loading stories...", "p-2 text-center")
+
+    try {
+        const content = await readJson(home("stories.json")) as { stories: Story[], lastUpdated: number }
+        if (content && content.lastUpdated > new Date().getTime() - 1000 * 60 * 60) {
+            return content.stories
+        }
+    } catch (e) {
+        console.log("Cached stories not found..fetching new ones (every hour)")
+    }
+
     const ids = await getTopStories()
     const stories = await Promise.all(ids.map(getStory))
+
+    // cache the stories
+    await writeJson(home("stories.json"), { stories, lastUpdated: new Date().getTime() })
     return stories
 }
 
 // sort by time and get the top 100 stories
 const stories = (await getStories()).sort((a, b) => b.time - a.time)
+
+
 
 const convertUnixToDate = (unix: number) => {
     const locale = Intl.DateTimeFormat().resolvedOptions().locale;
