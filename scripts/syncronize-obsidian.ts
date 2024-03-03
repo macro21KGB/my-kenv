@@ -6,6 +6,7 @@ import { simpleGit, SimpleGit } from 'simple-git';
 const OBSIDIAN_VAULT_PATH = "C:/Users/blood/Desktop/Progetti/ObsidianNotes"
 const git: SimpleGit = simpleGit(OBSIDIAN_VAULT_PATH);
 
+div("Syncronizing Obsidian vault with git...", "p-2 text-center")
 const gitpullResponse = await git.pull()
 await div(md(`${gitpullResponse.summary.insertions.toString()} insertions, ${gitpullResponse.summary.deletions.toString()} deletions.
 
