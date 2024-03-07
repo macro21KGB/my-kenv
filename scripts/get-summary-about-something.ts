@@ -4,7 +4,7 @@
 
 import "@johnlindquist/kit"
 
-import { summary } from 'wikipedia';
+import wiki from 'wikipedia';
 
 
 
@@ -13,7 +13,7 @@ await arg('What do you want to search for? (wikipedia)', async (input) => {
         return "<p class='p-2 text-slate-500'>Search value must be at least 3 characters</p>";
     }
     try {
-        const pageSummary = await summary(input);
+        const pageSummary = await wiki.summary(input);
         if (pageSummary.extract == null || pageSummary.extract == "") {
             return (md(`No summary found for ${input}`));
         }
