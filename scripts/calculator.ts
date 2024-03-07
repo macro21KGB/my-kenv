@@ -21,10 +21,11 @@ let selected = await arg({
     placeholder: 'Expression ...',
     enter: 'Copy & Exit'
 }, async (input) => {
+    if (input == "") return `<p class='text-center p-2'>Result here...</p>`
     try {
         return `<p class='text-center text-xl p-2'>${evalExp(input)}</p>`
     } catch (error) {
-        return "<p class='text-center text-red-600'>Invalid Expression</p>"
+        return "<p class='text-center text-red-600 p-2'>Invalid Expression</p>"
     }
 })
 
