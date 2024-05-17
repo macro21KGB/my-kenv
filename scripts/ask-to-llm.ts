@@ -1,5 +1,5 @@
-// Name: Ask to ChatGPT
-// Description: Send a single prompt to ChatGPT
+// Name: Ask to LLM
+// Description: Send a single prompt to AI completions API (Anthropic) and display the response
 // Shortcut: command shift enter
 // Group: AI
 

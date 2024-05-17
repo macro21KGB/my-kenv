@@ -1,4 +1,5 @@
 // Name: Fetch Prompts From Awesome Chatgpt prompts
+// Author: Mario De Luca
 // Cache: true
 // Group: AI
 
@@ -11,11 +12,9 @@ interface Prompt {
     content: string;
 }
 
-const response = await fetch("https://github.com/f/awesome-chatgpt-prompts", {
-    method: "GET",
-})
+const response = await get("https://github.com/f/awesome-chatgpt-prompts")
 
-const html = await response.text();
+const html = await response.data
 
 const $ = cheerio.load(html);
 
@@ -23,7 +22,7 @@ const allH2s = $("h2");
 const allBlockQuotes = $("blockquote");
 
 const prompts: Prompt[] = [];
-const BLOCK_QUOTE_OFFSET = 3;
+const BLOCK_QUOTE_OFFSET = 5;
 
 allH2s.each((index, element) => {
     const title = $(element).text();
