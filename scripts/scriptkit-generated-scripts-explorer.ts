@@ -24,7 +24,7 @@ const getScripts = async (text: string): Promise<{ title: string, code: string }
                 inCodeBlock = false;
                 codeBlock += line + '\n';
             } else if (inCodeBlock) {
-                codeBlock += line.replaceAll("\`", "`") + '\n';
+                codeBlock += line + '\n';
             }
         });
 

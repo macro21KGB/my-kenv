@@ -1,4 +1,6 @@
-// Name: Convert Obsidian Math to Anki
+// Name: Convert Obsidian Syntax to Anki Syntax
+// Author: Mario De Luca
+// Description: Converts Obsidian Markdown to Anki Mathjax and Markdown to HTML
 
 import "@johnlindquist/kit"
 import { marked } from "marked"
@@ -10,5 +12,11 @@ const replacedText = copiedText
     .replace(/\$([^$]+)\$/g, "<anki-mathjax>$1</anki-mathjax>")
     .replace(/\*{2}([^*{2}]+)\*{2}/g, "<b>$1</b>")
 
-await clipboard.writeText(await marked.parse(replacedText))
+const parsedMarkdown = await marked.parse(replacedText);
+
+const editedHtml = parsedMarkdown
+    .replaceAll(/blockquote/g,
+        'blockquote style="border-left: 2px solid #ccc; padding: 0.5rem;"')
+
+await clipboard.writeText(editedHtml)
 notify("Converted Obsidian Math to Anki")
