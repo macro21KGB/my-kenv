@@ -1,5 +1,5 @@
 // Name: Notify new Games at Gameway
-// Schedule: 0 14 * * *
+// Schedule: 30 11 * * *
 
 import "@johnlindquist/kit"
 import { JSONFilePreset } from 'lowdb/node'
@@ -8,7 +8,8 @@ import { join } from "path";
 
 interface GameList {
     games: string[],
-    hashCode: number
+    hashCode: number,
+    date: string
 }
 
 const DB_NAME = 'gameway-games.json'
@@ -29,7 +30,9 @@ const generateUniqueHashCode = (array: string[]) => {
     return hash >>> 0;
 }
 
-const gamewayHtml = (await get("https://www.gameway.it/p/arrivi")).data;
+const BASE_URL = "https://www.gameway.it/p/uscite"
+
+const gamewayHtml = (await get("https://www.gameway.it/p/uscite")).data;
 
 const $ = cheerio.load(gamewayHtml)
 
@@ -41,13 +44,26 @@ const hashCode = generateUniqueHashCode(games)
 // check if the hash code is different from the last one
 const storedGames = db.data
 
-const isAlreadyAdded = storedGames.some(({ hashCode }) => hashCode === hashCode)
+const isAlreadyListed = storedGames.some((game) => game.hashCode === hashCode)
 
-if (!isAlreadyAdded) {
+if (!isAlreadyListed) {
+    db.data.push({
+        games,
+        hashCode,
+        date: Intl.DateTimeFormat('it-IT').format(new Date())
+    })
 
-    db.data.push({ games, hashCode })
     db.write()
 
-    const message = `🎮 New Games at Gameway 🎮\n\n${games.join('\n')}`
-    notify(message)
+    const message = `🎮 New Games at Gameway 🎮${games.join('\n')}`
+    notify({
+        //@ts-expect-error
+        title: message, actions: ["Open", "Dismiss"], message: games.join('\n')
+    },
+        (err: Error | null, response: string) => {
+            if (!err && response === "open") {
+                open(BASE_URL)
+            }
+        }
+    )
 }

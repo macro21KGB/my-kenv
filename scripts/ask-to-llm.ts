@@ -5,7 +5,6 @@
 
 import "@johnlindquist/kit";
 
-
 const response = await fetch("https://api.anthropic.com/v1/messages", {
     body: JSON.stringify({
         model: "claude-3-haiku-20240307",
@@ -29,4 +28,4 @@ const response = await fetch("https://api.anthropic.com/v1/messages", {
 });
 
 const data = (await response.json()).content[0].text;
-await div(md(`${data}`), );
+await div(md(`${data}`), "bg-white text-black");
