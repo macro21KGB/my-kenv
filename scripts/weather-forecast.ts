@@ -86,22 +86,25 @@ const readCountrySettingFromDisk = async () => {
 
 const formatDateBasedOnTimezone = (date: string, timezone: string) => {
     const locale = Intl.DateTimeFormat().resolvedOptions().locale;
-    return new Date(date).toLocaleString(locale, { timeZone: timezone })
+    return new Date(date).toLocaleString(locale, { timeZone: timezone, day: "numeric", month: "2-digit", year: "2-digit" })
 
 }
 
 const settingsSaved = await readCountrySettingFromDisk()
-const countryInfo = settingsSaved === null ? await arg("Enter country", async (input) => {
-    if (!input) return []
+const countryInfo = settingsSaved === null ?
+    await arg("Enter country", async (input) => {
+        if (!input) return []
 
-    const result = await get<CoordsRequest>(`https://geocoding-api.open-meteo.com/v1/search?name=${input}`)
-    const countries = result.data?.results || []
+        const result = await get<CoordsRequest>(`https://geocoding-api.open-meteo.com/v1/search?name=${input}`)
+        const countries = result.data?.results || []
 
-    return countries.map(({ name, latitude, longitude, admin1, timezone }) => ({
-        name: `${name}, ${admin1}`,
-        value: { latitude, longitude, timezone, name }
-    }))
-}) : JSON.parse(settingsSaved).country
+        return countries.map(({ name, latitude, longitude, admin1, timezone }) => ({
+            name: `${name}, ${admin1}`,
+            value: { latitude, longitude, timezone, name }
+        }))
+    })
+    :
+    JSON.parse(settingsSaved).country
 
 if (settingsSaved === null) {
     await saveCountrySettingToDisk(countryInfo)
@@ -123,7 +126,7 @@ await div(`
         ${weather.daily.time.map((day, index) => {
     return `
         <div class="bg-gray-300 rounded p-2 h-dvh">
-            <h2>${formatDateBasedOnTimezone(day, timezone)}</h2>
+            <h2>${formatDateBasedOnTimezone(day, timezone).replace(/,.*/g, "")}</h2>
             <p>Max: ${weather.daily.temperature_2m_max[index]}°C (${weather.daily.apparent_temperature_max[index]}°C)</p>
             <p>Min: ${weather.daily.temperature_2m_min[index]}°C (${weather.daily.apparent_temperature_min[index]}°C)</p>
             <p class="text-slate-500 italic">${weather.daily.rain_sum[index] == 0 ? "No rain" : "Rain: " + weather.daily.rain_sum[index] + "mm"}</p>

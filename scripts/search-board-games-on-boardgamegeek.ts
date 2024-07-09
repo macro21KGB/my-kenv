@@ -1,4 +1,5 @@
 // Name: Search board games on BoardGameGeek
+// Author: Mario De Luca
 
 import "@johnlindquist/kit"
 import { parseStringPromise } from "xml2js"
